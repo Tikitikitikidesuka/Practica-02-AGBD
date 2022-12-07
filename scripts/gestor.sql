@@ -1,0 +1,11 @@
+CREATE ROLE 'gestor';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON PracABD1.* TO 'gestor';
+GRANT CREATE ROLE, DROP ROLE, GRANT OPTION ON *.* TO 'gestor';
+GRANT CREATE USER, ROLE_ADMIN ON *.* TO 'gestor';
+
+CREATE USER 'gohan' IDENTIFIED BY 'gohan';
+
+GRANT 'gestor' TO 'gohan';
+
+SET DEFAULT ROLE ALL TO 'gohan';

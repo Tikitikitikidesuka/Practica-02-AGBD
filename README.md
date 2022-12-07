@@ -33,4 +33,4 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
     - [ ] Para Trunks
     - [ ] Para Goku
     
-- [ ] Revocar los permisos de Goku y asegurarse de que se ha hecho correctamente.
+- [X] Revocar los permisos de Goku y asegurarse de que se ha hecho correctamente.

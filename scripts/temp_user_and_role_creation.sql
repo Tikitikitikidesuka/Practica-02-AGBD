@@ -8,6 +8,6 @@ GRANT 'testo_role'@'%' TO 'testo_user'@'%';
 
 SELECT current_role();
 
-SET DEFAULT ROLE ALL TO 'testo_user'@'%';  # IMPORTANTE B)
+SET DEFAULT ROLE ALL TO 'gohan';  # IMPORTANTE B)
 
 SELECT current_role();

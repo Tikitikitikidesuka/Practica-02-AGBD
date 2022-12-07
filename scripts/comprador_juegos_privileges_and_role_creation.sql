@@ -12,4 +12,4 @@ CREATE USER 'videl' IDENTIFIED BY 'videl';
 
 GRANT compradorJuegos TO 'vegeta', 'videl';
 
-SET DEFAULT ROLE ALL TO 'trunks', 'goku';
+SET DEFAULT ROLE ALL TO 'vegeta', 'videl';

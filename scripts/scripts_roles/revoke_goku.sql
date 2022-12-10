@@ -1,5 +1,3 @@
-SHOW GRANTS For 'goku';
-
 REVOKE 'dependiente' FROM 'goku';
 
-SHOW GRANTS For 'goku';
+GRANT SELECT ON PracABD1.* TO 'goku';

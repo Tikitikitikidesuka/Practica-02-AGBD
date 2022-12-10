@@ -26,11 +26,11 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
     - [X] Mediante la sentencia `SHOW GRANTS FOR 'user_role'`
     - [X] Mediante la interfaz de MySQL Workbench
 
-- [ ] Acceder a la base de datos con todos los usuarios creados y ejecutar por cada uno de ellos dos sentencias sobre las que tengan privilegios y otras dos sobre las que no:
-    - [ ] Para Gohan
-    - [ ] Para Vegeta
-    - [ ] Para Bidel
-    - [ ] Para Trunks
-    - [ ] Para Goku
+- [X] Acceder a la base de datos con todos los usuarios creados y ejecutar por cada uno de ellos dos sentencias sobre las que tengan privilegios y otras dos sobre las que no:
+    - [X] Para Gohan
+    - [X] Para Vegeta
+    - [X] Para Bidel
+    - [X] Para Trunks
+    - [X] Para Goku
     
 - [X] Revocar los permisos de Goku y asegurarse de que se ha hecho correctamente.

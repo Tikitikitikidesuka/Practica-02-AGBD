@@ -75,9 +75,10 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
 - [X] Ejecutar con el usuario freezer las operaciones A4 y B3 sobre las vistas y tomar sus tiempos:
 
     NOTA: Esta operación falla si las vistas no tienen todos los campos que no pueden ser nulos de la tabla original. Por tanto se añaden los campos nulos a las vistas (DNI al conjunto A y Consola al conjunto B
-    - [ ] Ejecución de A4 sobre A: T = 
-    - [ ] Ejecución de B3 sobre B: T = 
+    - [X] Ejecución de A4 sobre A: T = 0.0084 segundos.
+    - [X] Ejecución de B3 sobre B: T = 0.0153 segundos.
 
-- [ ] Comprobar si freezer puede operar directamente sobre las tablas a las que referencian las vistas.
+- [X] Comprobar si freezer puede operar directamente sobre las tablas a las que referencian las vistas.
+    NOTA: Vale con un SELECT * FROM clientes y otro sobre juegos para demostrar que no tiene acceso.
 
-- [ ] Realizar una comparativa de los dos métodos utilizados para manipular la información (consultas y vistas) que incluya aspectos de rendimiento y seguridad.
+- [X] Realizar una comparativa de los dos métodos utilizados para manipular la información (consultas y vistas) que incluya aspectos de rendimiento y seguridad.

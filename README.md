@@ -73,6 +73,8 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
     - [X] Ejecución de B2 sobre B: T = 0.0016 segundos.
 
 - [X] Ejecutar con el usuario freezer las operaciones A4 y B3 sobre las vistas y tomar sus tiempos:
+
+    NOTA: Esta operación falla si las vistas no tienen todos los campos que no pueden ser nulos de la tabla original. Por tanto se añaden los campos nulos a las vistas (DNI al conjunto A y Consola al conjunto B
     - [ ] Ejecución de A4 sobre A: T = 
     - [ ] Ejecución de B3 sobre B: T = 
 

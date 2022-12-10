@@ -28,7 +28,7 @@ SELECT *
 #B2
 SELECT COUNT(*) AS NumeroJuegosNintendo
 	FROM juegos
-    WHERE Editor = "Nintendo";
+    WHERE Editor = "Nintendo" AND Consola = "GameBoy";
     
 #B3
 INSERT INTO juegos (JuegoID, Titulo, Consola, Tamanio, Editor)

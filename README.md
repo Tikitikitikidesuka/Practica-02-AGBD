@@ -34,3 +34,34 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
     - [X] Para Goku
     
 - [X] Revocar los permisos de Goku y asegurarse de que se ha hecho correctamente.
+
+### Tareas Parte 2
+
+- [X] Crear la vista A que tenga información clave de los clientes (ClienteID, Nombre, Apellidos, Provincia, Email)
+
+- [X] Crear la vista B que tenga información clave de los videojuegos (JuegoID, Titulo, Tamanio, Editor)
+
+- [X] Crear consultas sobre la vista A:
+    - [X] A1 - Obtener nombres y apellidos de clientes ordenados por provincia.
+    - [X] A2 - Obtener el número de clientes de Sevilla.
+    - [X] A3 - Obtener el email de los clientes de Barcelona.
+    - [X] A4 - Insertar los nuevos clientes.
+
+- [X] Crear consultas sobre la vista B:
+    - [X] B1 - Obtener información de los videojuegos ordenados por tamaño.
+    - [X] B2 - Obtener el número de videojuegos editados por Nintendo.
+    - [X] B3 - Insertar nuevos videojuegos de GameBoy.
+
+- [X] Ejecutar con el usuario **root** las consultas anteriores y tomar sus tiempos:
+    - [X] Ejecución de A1: T = 0.2714 segundos.
+    - [X] Ejecución de A2: T = 0.0427 segundos.
+    - [X] Ejecución de A3: T = 0.0188 segundos.
+    - [X] Ejecución de A4: T = 0.0156 segundos.
+    - [X] Ejecución de B1: T = 0.0299 segundos.
+    - [X] Ejecución de B2: T = 0.0021 segundos.
+    - [X] Ejecución de B3: T = 0.0149 segundos.
+    
+   
+
+
+

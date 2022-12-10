@@ -58,10 +58,24 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
     - [X] Ejecución de A3: T = 0.0188 segundos.
     - [X] Ejecución de A4: T = 0.0156 segundos.
     - [X] Ejecución de B1: T = 0.0299 segundos.
-    - [X] Ejecución de B2: T = 0.0021 segundos.
+    - [X] Ejecución de B2: T = 0.0041 segundos.
     - [X] Ejecución de B3: T = 0.0149 segundos.
     
-   
+- [X] Crear con el usuario **root** las vistas que permitan la ejecución de las operaciones mencionadas.
 
+- [X] Crear con el usuario **root** al usuario freezer y darle los permisos para trabajar con las vistas mediante las operaciones indicadas.
 
+- [X] Ejecutar con el usuario freezer las operaciones A1, A2, A3, B1, y B2 sobre las vistas y tomar sus tiempos:
+    - [X] Ejecución de A1 sobre A: T = 0.2769 segundos.
+    - [X] Ejecución de A2 sobre A: T = 0.0299 segundos.
+    - [X] Ejecución de A3 sobre A: T = 0.0223 segundos.
+    - [X] Ejecución de B1 sobre B: T = 0.0027 segundos.
+    - [X] Ejecución de B2 sobre B: T = 0.0016 segundos.
 
+- [X] Ejecutar con el usuario freezer las operaciones A4 y B3 sobre las vistas y tomar sus tiempos:
+    - [ ] Ejecución de A4 sobre A: T = 
+    - [ ] Ejecución de B3 sobre B: T = 
+
+- [ ] Comprobar si freezer puede operar directamente sobre las tablas a las que referencian las vistas.
+
+- [ ] Realizar una comparativa de los dos métodos utilizados para manipular la información (consultas y vistas) que incluya aspectos de rendimiento y seguridad.

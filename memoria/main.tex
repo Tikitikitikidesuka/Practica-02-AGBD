@@ -136,9 +136,6 @@
 	
 \section{Parte 1}
 
-
-
-
 \subsection{Creación de los roles y los usuarios}
 
 Se quieren crear los roles \mintinline{mysql}{gestor}, \mintinline{mysql}{compradorJuegos} y \mintinline{mysql}{dependiente} con las siguientes especificaciones:
@@ -158,7 +155,6 @@ Esto se realiza con los siguientes scripts:
 \inputminted{mysql}{\scriptdir scripts_roles/comprador_juegos_privileges_and_role_creation.sql}
 
 \inputminted{mysql}{\scriptdir scripts_roles/dependiente_privileges_and_role_creation.sql}
-
 
 \subsection{Comprobación de los cambios}
 
@@ -183,135 +179,13 @@ Cada uno de los usuarios ejecutó unas sentencias para probar sus privilegios. E
 \inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/trunks_queries.sql}
 \inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/goku_queries.sql}
 
+\subsection{Revocar los permisos de Goku}
 
-\iffalse
+Debido a un cambio organizativo, es necesario quitarle los permisos de inesrción y modificación a Goku. Para realizarlo se utiliza el siguiente script:
 
-Como se puede ver, cada espacio de tabla tiene su propio fichero asignado.
+\inputminted{mysql}{\scriptdir scripts/scripts_roles/revoke_goku.sql}
 
-La eliminación de los espacios creados se realiza a través de un script igual de sencillo:
-
-\inputminted{mysql}{\scriptdir drop_physical.sql}
-
-
-
-
-\subsection{Scripts de gestión de las tablas}
-
-Inicalmente, las tablas se establecieron como se indicaba en el anexo, pero debido a un problema durante la carga de datos, hubo que modificar el número de carácteres de los títulos de los juegos a un número mayor que 32 y comentar el \mintinline{mysql}{UNIQUE} de los títulos de los juegos. En la sección de carga de datos se explican estos errores y sus soluciones con más detalle.
-
-\inputminted{mysql}{\scriptdir set_tables.sql}
-
-Eliminar las tablas no supuso mucha dificultad:
-
-\inputminted{mysql}{\scriptdir drop_tables.sql}
-
-
-
-
-\subsection{Inserción de los datos}
-
-Hasta este punto del desarrollo no surgieron muchos problemas, es a partir de la carga de datos que empieza lo entretenido.
-
-MySQL ofrece dos sentencias muy cómodas para cargar datos de ficheros: \mintinline{mysql}{LOAD DATA LOCAL INFILE} y \mintinline{mysql}{LOAD XML LOCAL INFILE} para \emph{csv} y \emph{xml} respectivamente.
-
-Ambas sentencias requieren que se especifique que datos del fichero corresponden a cuales de la tabla, permitiendo además que se realizen algunas operaciones sobre ellos antes de introducirlos. Las únicas transformaciones de datos necesarias fueron el cambio de formato de las fechas y el cambio de ids de los juegos.
-
-El script de carga resultante parecía prometedor, pero saltaba el siguiente error al ejecutarlo: \emph{Error Code: 3948. Loading local data is disabled; this must be enabled on both the client and server sides}. La solución a este problema es cambiar el valor de la variable \mintinline{mysql}{local_infile} a \mintinline{mysql}{TRUE}. Esto permite la carga de datos desde ficheros, que por defecto está desactivada por motivos de seguridad. Es importante que tras la carga de los datos se vuelva a poner el valor de la variable a \mintinline{mysql}{FALSE}, para evitar posibles riesgos en el futuro:
-
-\begin{minted}{mysql}
-# Permitir la inserción de datos desde ficheros
-SET GLOBAL local_infile = TRUE;
-
-# Operaciones de inserción
-...
-# Fin de  las operaciones de inserción
-
-# Impedir la inserción de datos desde ficheros
-SET GLOBAL local_infile = FALSE;
-\end{minted}
-
-Aun con este cambio es posible que salte este otro error: \emph{Error Code: 2068. LOAD DATA LOCAL INFILE file request rejected due to restrictions on access}. Este en particular es debido a las propiedades de la conexión con la base de datos. Para solucionarlo se pueden editar dichas propiedades en el panel de conexiones de \textbf{MySQL Workbench}, herramienta a través de la cual trabajabamos con nuestra base de datos:
-
-\begin{enumerate}
-	\item En la pagina de conexiones de MySQL Workbench se presiona click derecho sobre la conexión que se desea editar y se selecciona la opción "\textbf{Edit connection...}".
-	\item Dentro de la ventana que se abre, \textbf{Manage Server Connections}, se pincha en la pestaña \textbf{Advanced}.
-	\item En el cuadro de texto \textbf{Others} de la pestaña Advanced se introduce la siguiente linea al final: \mintinline{text}{OPT_LOCAL_INFILE=1}.
-\end{enumerate}
-
-A continuación se muestra una imagen de como debería quedar la ventana de conexiones:
-
-\includegraphics[width=\textwidth]{\imagedir ventana_conexion_mysql_workbench.png}
-
-Con estos dos arreglos ya por fin pudimos cargar los datos a la base de datos, pero resultó que esos dos problemas eran solo el principio. El juego de datos tenía múltiples problemas que se debían solucionar para poder insertar claves a las tablas:
-
-\begin{enumerate}
-	\item En los datos de \emph{Clientes\_Juegos} había un par de juegos que no existían: el 12000 y el 15000.
-
-	\item Algunos juegos tenian títulos repetidos. Estos se descomponian en dos tipos:
-	\begin{enumerate}
-		\item Algunos tenían el resto de los atributos distintos, como el editor.
-		\item Otros tenían todo idéntico salvo las claves.
-	\end{enumerate}
-\end{enumerate}
-
-La solución al primer problema fue eliminar las filas que referenciaban juegos inexistentes. La solución al segundo no fue ni de cerca tan sencilla.
-
-Para arreglar los juegos con título idéntico pero de diferentes editores, concatenamos el título con el editor de forma que los títulos se volviesen únicos entre ellos. Para arreglar el segundo caso, los juegos duplicados debían ser eliminados de forma que solo quedase una fila y un id por cada título. El problema es que antes de eliminar los dúplicados era necesario visitar la tabla de cruce entre los clientes y los juegos y cambiar todos los ids de juegos que serían eliminados por el id del juego que sobreviviría. Esto se logró con el siguiente script:
-
-\inputminted{mysql}{\scriptdir limpieza_datos.sql}
-
-Para completar las siguientes secciones del proyecto era necesario poder cargar los datos después de poner las claves primarias y foráneas, cosa que este método de carga y posterior limpieza no permitía. Por suerte, MySQL tiene una sentencia para exportar datos a csv. Aprovechándola, exportamos los datos de cada tabla ya filtrados a ficheros que poder cargar más adelante.
-
-Una nota importante sobre este proceso es que por motivos no muy claros, el primer id de cada tabla exportada se cambiaba por un cero. Como solo una fila se veía afectada como máximo, restablecimos los ids erroneos a sus valores correctos manualmente.
-
-Tras todo esto, la carga de los datos podía volver a realizarse facilmente en cualquier momento cargando los ficheros de datos filtrados de la siguiente forma:
-
-\inputminted{mysql}{\scriptdir load_curated_data.sql}
-
-Cerca del final del proyecto descubrimos una funcionalidad de MySQL Workbench que produce un backup de los datos de las tablas sin guardar la estructura de la base de datos que importa de forma mucho más veloz que con el \emph{csv}.
-
-\subsection{Scripts de gestión de claves}
-
-Los scripts de gestión de claves son bastante sencillos, simplemente se alteran las tablas para establecer los campos especificados como claves primarias o foráneas:
-
-\inputminted{mysql}{\scriptdir set_table_primary_keys.sql}
-
-\inputminted{mysql}{\scriptdir set_table_foreign_keys.sql}
-
-Para eliminarlas si fuese necesario:
-
-\inputminted{mysql}{\scriptdir drop_table_primary_keys.sql}
-
-\inputminted{mysql}{\scriptdir drop_table_foreign_keys.sql}
-
-
-
-
-\subsection{?`Importa el orden de inserción de claves y datos?}
-
-Para resolver la duda de si es más rápido insertar los datos primero y luego añadir las claves o al revés, realizamos la prueba de forma empírica, que concluyó con los siguientes resultados:
-
-Creándo las claves e insertando después: 2441.18 ms
-
-\begin{enumerate}
-	\item Creación de las claves primarias: 259.24 ms 
-	\item Creación de las claves foráneas: 178.14 ms
-	\item Inserción de los datos: 2003.8 ms
-\end{enumerate}
-
-Insertando primero y creando las claves después: 8551.96 ms
-
-\begin{enumerate}
-	\item Inserción de los datos: 1626.4 ms
-	\item Creación de las claves primarias: 6656.8 ms
-	\item Creación de las claves foráneas: 268.76 ms
-\end{enumerate}
-
-Se puede observar que el proceso es muchísimo más lento si se crean las claves tras la inserción de los datos.
-
-El paso de cargar los datos tarda ligeramente más si ya existian las claves previamente, debido a que se deben ir comprobando las restricciones y actualizando los índices. A cambio, la creación de las claves es muy veloz. Con el proceso invertido se tarda muchísimo más en total porque crear las claves sobre los datos ya insertados es un proceso increíblemente costoso de verificación de restricciones y creación de índices.
-	
-\newpage
+Se le quita el rol de dependiente y se le ponen privilegios personalizados para cumplir los requisitos.
 
 %------------------------------------------------
 %	Parte 2
@@ -319,44 +193,66 @@ El paso de cargar los datos tarda ligeramente más si ya existian las claves pre
 
 \section{Parte 2}
 
-\subsection{Consultas más frecuentes}
+\subsection{Crear las vistas para freezer}
 
-Lo primero que hicimos para optimizar las consultas más frecuentes es programarlas, de forma que más adelante pudiésemos comparar las diferencias de velocidad:
+Ahora se crea al usuario freezer y las vistas que podrá usar:
 
-\inputminted{mysql}{\scriptdir consultas/procedures.sql}
+\inputminted{mysql}{\scriptdir scripts/scripts_roles/freezer_and_views_creation.sql}
 
-Al ser las consultas más frecuentes, las registramos como procedimientos para facilitar su llamada más adelante.
+\subsection{Crear consultas de freezer}
 
-Una vez programadas, nos pusimos a optimizar.
+A continuación se crean las consultas especificadas en el enunciado para freezer sobre las vistas:
 
-\subsection{Optimización mediante índices}
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/freezer_queries.sql}
 
-Los tres índices, aparte de los de las claves, que impusimos son para los nombres, los apellidos y los títulos de los juegos, que por su aparición en las consultas, parecían los que más optimización prometían.
+Se añade \mintinline{mysql}{SHOW PROFILES} para ver los tiempos de ejecución de las consultas.
 
-Las distintas combinaciones de índices produjeron los siguientes tiempos para las consultas más frecuentes:
+Para que lo haga root sobre las tablas directamente se crea también el siguiente script:
 
-\begin{table}[H]
-\centering
-\begin{tabular}{|c|c|c|l|l|l|}
-\hline
-Primary Key            & Foreign Key           & Índice 1              & \multicolumn{1}{c|}{Índice 2} & \multicolumn{1}{c|}{Índice 3} & \multicolumn{1}{c|}{Tiempo}    \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} &                               &                               & 246.92 ms                      \\ \hline
-X                      & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} &                               &                               & 232.84 ms                      \\ \hline
-X                      & X                     & \multicolumn{1}{l|}{} &                               &                               & 213.06 ms                      \\ \hline
-X                      & X                     & X                     &                               &                               & 210.56 ms                      \\ \hline
-X                      & X                     &                       & \multicolumn{1}{c|}{X}        & \multicolumn{1}{c|}{}         & \multicolumn{1}{c|}{178.49 ms} \\ \hline
-X                      & X                     &                       & \multicolumn{1}{c|}{}         & \multicolumn{1}{c|}{X}        & \multicolumn{1}{c|}{212.67 ms} \\ \hline
-X                      & X                     & X                     & \multicolumn{1}{c|}{X}        & \multicolumn{1}{c|}{X}        & \multicolumn{1}{c|}{170.73 ms} \\ \hline
-\end{tabular}
-\end{table}
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/root_queries.sql}
 
-La especificación de los índices mencionados se realiza con este código:
+\subsection{Ejecutar las consultas con root}
 
-\inputminted{mysql}{\scriptdir consultas/setIndices.sql}
+Los tiempos de ejecutar las consultas con el usuario root sobre las tablas son los siguientes:
 
-Las mejoras de todos ellos son lo suficientemente buenas como para permanecer en la base de datos a pesar de que los tiempos de inserción se vean ligeramente afectados.
+\begin{itemize}
+	\item Ejecución de A1: T = 0.2714 segundos.
+	\item Ejecución de A2: T = 0.0427 segundos.
+	\item Ejecución de A3: T = 0.0188 segundos.
+	\item Ejecución de A4: T = 0.0156 segundos.
+	\item Ejecución de B1: T = 0.0299 segundos.
+	\item Ejecución de B2: T = 0.0041 segundos.
+	\item Ejecución de B3: T = 0.0149 segundos.
+\end{itemize}
 
-\newpage
+\subsection{Ejecutar las consultas con freezer}
+
+Los tiempos de ejecutar las consultas con el usuario freezer sobre las vistas son los siguientes:
+
+\begin{itemize}
+	\item Ejecución de A1 sobre A: T = 0.2769 segundos.
+	\item Ejecución de A2 sobre A: T = 0.0299 segundos.
+	\item Ejecución de A3 sobre A: T = 0.0223 segundos.
+	\item Ejecución de B1 sobre B: T = 0.0027 segundos.
+	\item Ejecución de B2 sobre B: T = 0.0016 segundos.
+\end{itemize}
+
+Las consultas A4 y B3 fallan si las vistas no tienen todos los campos que no pueden ser nuelos de la tabla original. Para resolver este problema se añaden los campos nulos a las vistas (DNI al conjunto A y Consola al conjunto B). Los tiempos tras este cambio de dichas consultas son:
+
+\begin{itemize}
+	\item Ejecución de A4 sobre A: T = 0.0084 segundos.
+	\item Ejecución de B3 sobre B: T = 0.0153 segundos.
+\end{itemize}
+
+\subsection{Comprobar las consultas de freezer sobre las tablas}
+
+Se puede comprobar que freezer no puede operar directamente sobre las tablas intentando hacer consultas desde su usuario a ellas. Fallan tanto \mintinline{mysql}{SELECT * FROM clientes} como \mintinline{mysql}{SELECT * FROM clientes_juegos}.
+
+\subsection{Comparativa de los métodos}
+
+En cuanto a la eficiencia, la consulta de datos a través de vistas puede ser más eficiente que una sobre la tabla subyacente. Esto es porque las vistas precomputan los resultados de las consultas y los almacenan en una tabla virtual, de forma que permite un acceso más rápido a los datos.
+
+La seguridad también puede verse favorecida por el uso de las vistas. Se pueden crear vistas con privilegios propios y los datos justos para manejar el acceso de cada usuario a ellos de forma mucho más precisa.
 
 %------------------------------------------------
 %	Parte 3
@@ -364,138 +260,30 @@ Las mejoras de todos ellos son lo suficientemente buenas como para permanecer en
 
 \section{Parte 3}
 
-\subsection{?`Cómo creamos la base de datos MySQL?}
+\subsection{Crear la copia de seguridad}
 
-La base de datos con la que se ha estado tratando hasta este punto era una MySQL en un contenedor de Docker. Para la replicación de este proyecto se puede crear de la siguiente forma:
+La copia de seguridad se puede hacer a través de la consola de MySQL o de la interfaz gráfica de MySQLWorkbench.
 
-\begin{minted}{bash}
-docker run --name <NOMBRE_DEL_CONTENDOR>\
--p <PUERTO_REAL>:<PUERTO_VIRTUAL>\
--e MYSQL_ROOT_PASSWORD=<CONTRASEÑA_DEL_USUARIO_ROOT>\
--d mysql:<VERSION_DE_MYSQL>
-\end{minted}
+Para realizarlo a través del terminal se haría lo siguiente:
 
-En nuestro caso en particular:
+\minted{bash}{mysqldump -u root PracABD1 > backup_fecha.sql}
 
-\begin{minted}{bash}
-docker run --name mysql\
--p 3306:3306\
--e MYSQL_ROOT_PASSWORD=Keo\
--d mysql:latest
-\end{minted}
+Como en nuestro caso la MySQL está en un contendor Docker, primero hace falta acceder a su terminal con:
 
-La contraseña está cambiada.
+\minted{bash}{docker exec -it mysql bash}
 
-
-
-
-\subsection{Acceso a MySQL desde phpMyAdmin}
-
-Para acceder a la base de datos MySQL con phpMyAdmin es necesario configurar las siguientes lineas en el fichero "\mintinline{bash}{Applications/XAMPP/xamppfiles/phpmyadmin/config.inc.php}" en OS X o "\mintinline{bash}{C:/xampp/phpMyAdmin/config.inc.php}" en Windows:
-
-\begin{minted}{php}
-/* Authentication type */
-$cfg['Servers'][$i]['auth_type] = 'config';
-$cfg['Servers'][$i]['user'] = 'root';
-$cfg['Servers'][$i]['password'] = 'contraseña';
-/* Server parameters */
-$cfg['Servers'][$i]['host'] = 'dirección_ip:puerto'
-\end{minted}
-
-El contenido de dichas lineas debe ser el de las credenciales de la base de datos a la que se desea acceder.
-
-
-
-
-\subsection{Arreglar MariaDB de XAMPP}
-
-En Mac OS X la base de datos MariaDB que venía con XAMPP daba muchos fallos. Intentamos arreglarlos hasta que encontramos uno que no fuimos capaces de solucionar en un tiempo razonable. Como ya sabíamos usar Docker, creamos un contenedor de MariaDB para solucionar la situación:
-
-\begin{minted}{bash}
-docker run --name <NOMBRE_DEL_CONTENDOR>\
--p <PUERTO_REAL>:<PUERTO_VIRTUAL>\
--e MYSQL_ROOT_PASSWORD=<CONTRASEÑA_DEL_USUARIO_ROOT>\
--d mariadb:<VERSION_DE_MARIADB>
-\end{minted}
-
-En nuestro caso en particular:
-
-\begin{minted}{bash}
-docker run --name mariadb\
--p 3309:3306\
--e MYSQL_ROOT_PASSWORD=Keo\
--d mariadb:10.4
-\end{minted}
-
-La contraseña está cambiada.
-
-Se puede apreciar que en este contenedor mapeamos el puerto 3306 del entorno virtual al puerto 3309 de la máquina, de forma que no hace falta cambiar el puerto del servidor internamente para que use un puerto diferente al del servidor MySQL anterior.
-
-
-
-
-\subsection{Comprobar el funcionamiento del entorno}
-
-Para comprobar que todo hasta aquí se había realizado de manera correcta, introdujimos un cliente falso en la tabla de clientes de MySQL desde phpMyAdmin, comprobamos su inserción desde MySQL Workbench y lo eliminamos para no dejar datos contaminados. De igual forma, creamos una tabla de prueba en la base de datos MariaDB, introdujimos una fila de prueba y comprobamos su inserción desde phpMyAdmin.
-
-
-
-
-\subsection{Insertar los datos de MySQL a MariaDB}
-
-Para replicar la base de datos MySQL en MariaDB solo hubo que ejecutar de forma ordenada los scripts elaborados durante la primera y segunda parte del proyecto en este orden:
+Para hacerlo a través de la interfaz de MySQL Workbench:
 
 \begin{enumerate}
-	\item Creación de los espacios de tabla.
-	\item Creación de las tablas en sus correspondientes espacios.
-	\item Inserción de las claves primarias y foráneas.
-	\item Inserción de los índices.
-	\item Inserción de los procedimientos más frecuentes.
-	\item Inserción de los datos del backup.
+	\item Se selecciona "Server > Data Export".
+	\item Se activa la opción "Export to Self-Contained File".
+	\item Se indica el fichero al que se quiere exportar.
+	\item Se selecciona el schema deseado.
+	\item Se pincha en el boton "Start Export".
 \end{enumerate}
 
-Aunque si hubo un problema: en MariaDB los índices de clave primaria posteriores a la creación de las tablas generados mediante un \mintinline{mysql}{ALTER TABLE} no sobreescriben los unique anteriores, por lo que hubo que eliminarlos a mano para añadir los de clave primaria:
+\subsection{Cargar la copia de seguridad}
 
-\inputminted{mysql}{\scriptdir remplazar_indices_pk_xammp.sql}
-
-
-
-
-\subsection{Configurar los tamaños de página}
-
-Para configurar el tamaño de página de la base de datos es necesario rehacerla por lo que un backup sería no solo prudente si no necesario.
-
-En el fichero "\mintinline{bash}{/etc/mysql/my.cnf}", dentro del contendor de MariaDB, es necesario añadir la siguiente linea donde se encuentran las sentencias de \emph{innodb}: \mintinline{bash}{innodb_page_size = <tamaño_de_página>}. En nuestro caso \mintinline{bash}{tamaño_de_página} valdrá: \mintinline{bash}{4k, 16k y 64k}. El buffer ya venía preconfigurado con un tamaño razonable de 246 Mb, pero si fuese necesario cambiarlo, se haría en la linea: \mintinline{bash}{innodb_buffer_pool_size = <tamaño_del_buffer>}.
-
-Una vez cambiados los parámetros de \emph{innodb} hay que eliminar la base de datos. Esto se hace borrando todo el contenido en "\mintinline{bash}{/var/lib/mysql}".
-
-Realizando las pruebas con los distintos tamaños de página quedan los siguientes resultados:
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-\multicolumn{1}{|c|}{Tamaño Página} & \multicolumn{1}{c|}{Espacio Base de Datos} & \multicolumn{1}{c|}{Tiempo de Consultas} \\ \hline
-4 KB                                & 28.8 MB                                    & 251.0 ms                                 \\ \hline
-16 KB                               & 26.8 MB                                    & 235.7 ms                                 \\ \hline
-64 KB                               & 30.5 MB                                    & 216.8 ms                                 \\ \hline
-\end{tabular}
-\end{table}
-
-Al ser consultas que afectan a todas las filas de la tabla, cuanto mayor es la página, más rápida es la consulta. Esto es porque se cargan menos páginas cuanto más grandes son.
-
-\newpage
-
-%------------------------------------------------
-%	Conclusión
-%------------------------------------------------
-
-\section{Conclusión}
-
-Durante esta práctica, no solo hemos aprendido sobre administración y gestión de bases de datos, si no que también hemos desarrollado habilidades de resolución de problemas externos, como la instalación de los servidores y clientes, que dio bastantes más problemas de los esperados.
-
-Lo más complicado fue la limpieza de los datos, debido a la inmensa cantidad de cambios sobre los datos iniciales necesarios y a que solo se iba detectando su necesidad a medida que surgían errores. Gracias a los conocimientos que adquirimos en la asignatura de bases de datos de segundo, pudimos ocuparnos de esta parte utilizando SQL desde de la base de datos, sin tener que utilizar herramientas externas como excel.
-
-\fi
+Para cargar la copia de seguridad simplemente se crea el schema nuevo con \mintinline{mysql}{CREATE SCHEMA recovery_10_12_2022} y se carga a través del terminal con \mintinline{bash}{mysql -u root -p recovery_10_12_2022 < backup 10_12_2022.sql} o por el mismo método que la exportación con MySQLWorkbench pero dándole al botón de importar.
 
 \end{document}

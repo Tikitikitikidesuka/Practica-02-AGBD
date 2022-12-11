@@ -1,4 +1,5 @@
-#Iniciando Sesión como root
+#INICIANDO SESIÓ COMO ROOT
+
 SET PROFILING = TRUE;
 
 #A1

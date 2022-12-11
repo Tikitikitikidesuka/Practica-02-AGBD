@@ -1,4 +1,5 @@
-#Iniciando Sesión como Freezer
+#INICIANDO SESIÓN COMO FREEZER
+
 SET PROFILING = TRUE;
 
 #A1

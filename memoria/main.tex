@@ -1,0 +1,501 @@
+%----------------------------------------------------------------------------------------
+%	PAQUETES Y CONFIGURACIÓN
+%----------------------------------------------------------------------------------------
+
+\documentclass[a4paper, 11pt, oneside]{article} % Hoja A4, fuente 11pt y oneside
+
+\newcommand{\scriptdir}{../scripts/} % Directorio de los scripts
+\newcommand{\imagedir}{../images/} % Directorio de las imagenes
+\newcommand{\plogo}{\fbox{$\mathcal{LCDPM}$}} % Logo del publisher
+
+\usepackage[parfill]{parskip} % Para no indentar la primera linea de cada párrafo
+\usepackage[utf8]{inputenc} % Para permitir el input de carácteres internacionales
+\usepackage[T1]{fontenc} % Para permitir el output de carácteres internacionales
+\usepackage{hyperref} % Para poner links en el índice
+\usepackage{graphicx} % Para incluir imágenes
+\usepackage{xcolor} % Para poner colores 
+\usepackage{minted} % Para poner código
+\usepackage{float} % Para fijar las tablas
+
+\tolerance=9999			% Permite espacios en blanco grandes entre palabras
+\emergencystretch=10pt		% Permite un poco de flexibilidad en la longitud de linea
+\hyphenpenalty=10000		% Deshabilita los guiones para cortar palabras
+\exhyphenpenalty=100		% Permite usar guiones puestos por el usuario
+
+\definecolor{MintedBG}{HTML}{F2EEE9} % Color de fondo de las cajas minted
+
+\setlength{\fboxsep}{0pt} % Quitar margen de color de las cajas minted
+
+\setminted[]{
+	frame=single,		% Caja alrededor del código
+	framesep=8pt,		% Margen entre la caja y el código
+	bgcolor=MintedBG,	% Color de fondo
+	breaklines,		% Permitir cortar la linea en un linebreak
+	breakafter=_,		% Permitir cortar palabras en las barras bajas
+}
+
+\setmintedinline[]{
+	bgcolor={},		% Quitar color de fondo del código inline
+	breaklines,		% Permitir cortar la linea en un linebreak
+	breakafter=_,		% Permitir cortar palabras en las barras bajas
+}
+
+\hypersetup{
+	colorlinks=true,	% Links del índice visibles
+	linktoc=all,		% Links del índice activados
+	linkcolor=black,	% Links del índice negros
+}
+
+%----------------------------------------------------------------------------------------
+%	PORTADA
+%----------------------------------------------------------------------------------------
+
+\begin{document} 
+
+\begin{titlepage} % Elimina los encabezados y los piés de página de la portada
+
+	\centering
+	
+	\scshape % Cambia las minúsculas por mayúsculas pequeñas
+	
+	\vspace*{\baselineskip} % Espacio en blanco en la parte superior de la página
+	
+	%------------------------------------------------
+	%	Título
+	%------------------------------------------------
+	
+	\rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt} % Linea gruesa superior
+	\rule{\textwidth}{0.4pt} % Linea fina superior
+	
+	\vspace{0.75\baselineskip} % Espacio en blanco sobre el título
+	
+	{\LARGE \textbf{PRÁCTICA 2}} % Título
+	
+	\vspace{0.75\baselineskip} % Espacio en blanco bajo el título
+	
+	\rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt} % Linea fina inferior
+	\rule{\textwidth}{1.6pt} % Linea gruesa superior
+	
+	\vspace{2\baselineskip} % Espacio en blanco bajo el bloque de título
+	
+	%------------------------------------------------
+	%	Subtítulo
+	%------------------------------------------------
+	
+	\textbf{Administración y Gestión de Bases de Datos} % Nombre de la asignatura
+	
+	\vspace*{3\baselineskip} % Espacio en blanco bajo el subtítulo
+	
+	%------------------------------------------------
+	%	Autores
+	%------------------------------------------------
+	
+	\textbf{Escrito por}
+	
+	\vspace{0.5\baselineskip} % Espacio en blanco sobre los autores
+	
+	{\scshape\Large \textbf{Alejandro Fernández de la Puebla Ugidos\\ Miguel Hermoso Mantecón \\ Carlos Lafuente Sanz \\}} % Lista de autores
+	
+	\vspace{1.0\baselineskip} % Espacio en bajo los autores
+	
+	\textit{\textbf{Universidad Politécnica de Madrid \\}} % Universidad
+
+	\vspace{0.25\baselineskip} % Espacio en blanco entre la universidad y el campus
+
+	\textit{\textbf{ETSISI}} % Campus
+	
+	\vfill % Espacio en blanco central
+	
+	%------------------------------------------------
+	%	Fecha y publisher
+	%------------------------------------------------
+	
+	\textbf{11 de diciembre de 2022} % Fecha
+	
+	\vspace{0.5\baselineskip} % Espacio antes del publisher
+
+	\plogo % Logo del publisher
+
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	CONTENIDO
+%----------------------------------------------------------------------------------------
+
+\renewcommand*\contentsname{Índice} % Título del índice en español
+
+\setcounter{tocdepth}{3} % Mostrar hasta subsections en el índice
+
+\tableofcontents % Índice
+
+\newpage
+
+%------------------------------------------------
+%	Parte 1
+%------------------------------------------------
+	
+\section{Parte 1}
+
+
+
+
+\subsection{Creación de los roles y los usuarios}
+
+Se quieren crear los roles \mintinline{mysql}{gestor}, \mintinline{mysql}{compradorJuegos} y \mintinline{mysql}{dependiente} con las siguientes especificaciones:
+
+El rol \mintinline{mysql}{gestor} podrá realizar cualquier operación LMD sobre las tablas y tendrá permiso de propagación de privilegios. Además, los usuarios con este rol podrán operar (crear, modificar, etc.) con los roles, usuarios y privilegios que se abordan en los siguientes puntos.
+
+El rol \mintinline{mysql}{compradorJuegos} podrá visualizar todas las tablas de la BD y también podrá dar de alta nuevos videojuegos que ha adquirido (operando sobre la tabla juegos).
+
+El rol \mintinline{mysql}{dependiente} podrá visualizar todas las tablas de la BD, dar de alta nuevos clientes y modificar clientes existentes (operando sobre la tabla Clientes), así como indicar que un cliente ha alquilado un videojuego añadiendo un nuevo registro (operando sobre la tabla clientes\_juegos).
+
+Tambíen se quieren crear los suarios \mintinline{mysql}{gohan} con rol \mintinline{mysql}{gestor}, \mintinline{mysql}{vegeta} con el rol \mintinline{mysql}{compradorJuegos}, \mintinline{mysql}{videl} con el rol \mintinline{mysql}{compradorJuegos}, \mintinline{mysql}{trunks} con el rol \mintinline{mysql}{dependiente} y \mintinline{mysql}{goku} con el rol \mintinline{mysql}{dependiente}.
+
+Esto se realiza con los siguientes scripts:
+
+\inputminted{mysql}{\scriptdir scripts_roles/gestor.sql}
+
+\inputminted{mysql}{\scriptdir scripts_roles/comprador_juegos_privileges_and_role_creation.sql}
+
+\inputminted{mysql}{\scriptdir scripts_roles/dependiente_privileges_and_role_creation.sql}
+
+
+\subsection{Comprobación de los cambios}
+
+Con el usuario root se quiere comprobar que los cambios anteriores se han realizado correctamente. Eso se hizo de dos formas distintas con el siguiente script:
+
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/check_privileges.sql}
+
+El primer método consulta el catálogo. El segundo directamente usa la sentencia de consulta de privilegios de MySQL.
+
+Como tercer método se puede usar la interfaz de MySQLWorkbench:
+
+\includegraphics[width=\textwidth]{\imagedir privilegios_01.png}
+\includegraphics[width=\textwidth]{\imagedir privilegios_02.png}
+
+\subsection{Prueba de sentencias}
+
+Cada uno de los usuarios ejecutó unas sentencias para probar sus privilegios. Estos son los scripts que se ocupan de ello y cada uno especifica que usuario debe ejecutarlo:
+
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/gohan_queries.sql}
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/vegeta_queries.sql}
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/videl_queries.sql}
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/trunks_queries.sql}
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/goku_queries.sql}
+
+
+\iffalse
+
+Como se puede ver, cada espacio de tabla tiene su propio fichero asignado.
+
+La eliminación de los espacios creados se realiza a través de un script igual de sencillo:
+
+\inputminted{mysql}{\scriptdir drop_physical.sql}
+
+
+
+
+\subsection{Scripts de gestión de las tablas}
+
+Inicalmente, las tablas se establecieron como se indicaba en el anexo, pero debido a un problema durante la carga de datos, hubo que modificar el número de carácteres de los títulos de los juegos a un número mayor que 32 y comentar el \mintinline{mysql}{UNIQUE} de los títulos de los juegos. En la sección de carga de datos se explican estos errores y sus soluciones con más detalle.
+
+\inputminted{mysql}{\scriptdir set_tables.sql}
+
+Eliminar las tablas no supuso mucha dificultad:
+
+\inputminted{mysql}{\scriptdir drop_tables.sql}
+
+
+
+
+\subsection{Inserción de los datos}
+
+Hasta este punto del desarrollo no surgieron muchos problemas, es a partir de la carga de datos que empieza lo entretenido.
+
+MySQL ofrece dos sentencias muy cómodas para cargar datos de ficheros: \mintinline{mysql}{LOAD DATA LOCAL INFILE} y \mintinline{mysql}{LOAD XML LOCAL INFILE} para \emph{csv} y \emph{xml} respectivamente.
+
+Ambas sentencias requieren que se especifique que datos del fichero corresponden a cuales de la tabla, permitiendo además que se realizen algunas operaciones sobre ellos antes de introducirlos. Las únicas transformaciones de datos necesarias fueron el cambio de formato de las fechas y el cambio de ids de los juegos.
+
+El script de carga resultante parecía prometedor, pero saltaba el siguiente error al ejecutarlo: \emph{Error Code: 3948. Loading local data is disabled; this must be enabled on both the client and server sides}. La solución a este problema es cambiar el valor de la variable \mintinline{mysql}{local_infile} a \mintinline{mysql}{TRUE}. Esto permite la carga de datos desde ficheros, que por defecto está desactivada por motivos de seguridad. Es importante que tras la carga de los datos se vuelva a poner el valor de la variable a \mintinline{mysql}{FALSE}, para evitar posibles riesgos en el futuro:
+
+\begin{minted}{mysql}
+# Permitir la inserción de datos desde ficheros
+SET GLOBAL local_infile = TRUE;
+
+# Operaciones de inserción
+...
+# Fin de  las operaciones de inserción
+
+# Impedir la inserción de datos desde ficheros
+SET GLOBAL local_infile = FALSE;
+\end{minted}
+
+Aun con este cambio es posible que salte este otro error: \emph{Error Code: 2068. LOAD DATA LOCAL INFILE file request rejected due to restrictions on access}. Este en particular es debido a las propiedades de la conexión con la base de datos. Para solucionarlo se pueden editar dichas propiedades en el panel de conexiones de \textbf{MySQL Workbench}, herramienta a través de la cual trabajabamos con nuestra base de datos:
+
+\begin{enumerate}
+	\item En la pagina de conexiones de MySQL Workbench se presiona click derecho sobre la conexión que se desea editar y se selecciona la opción "\textbf{Edit connection...}".
+	\item Dentro de la ventana que se abre, \textbf{Manage Server Connections}, se pincha en la pestaña \textbf{Advanced}.
+	\item En el cuadro de texto \textbf{Others} de la pestaña Advanced se introduce la siguiente linea al final: \mintinline{text}{OPT_LOCAL_INFILE=1}.
+\end{enumerate}
+
+A continuación se muestra una imagen de como debería quedar la ventana de conexiones:
+
+\includegraphics[width=\textwidth]{\imagedir ventana_conexion_mysql_workbench.png}
+
+Con estos dos arreglos ya por fin pudimos cargar los datos a la base de datos, pero resultó que esos dos problemas eran solo el principio. El juego de datos tenía múltiples problemas que se debían solucionar para poder insertar claves a las tablas:
+
+\begin{enumerate}
+	\item En los datos de \emph{Clientes\_Juegos} había un par de juegos que no existían: el 12000 y el 15000.
+
+	\item Algunos juegos tenian títulos repetidos. Estos se descomponian en dos tipos:
+	\begin{enumerate}
+		\item Algunos tenían el resto de los atributos distintos, como el editor.
+		\item Otros tenían todo idéntico salvo las claves.
+	\end{enumerate}
+\end{enumerate}
+
+La solución al primer problema fue eliminar las filas que referenciaban juegos inexistentes. La solución al segundo no fue ni de cerca tan sencilla.
+
+Para arreglar los juegos con título idéntico pero de diferentes editores, concatenamos el título con el editor de forma que los títulos se volviesen únicos entre ellos. Para arreglar el segundo caso, los juegos duplicados debían ser eliminados de forma que solo quedase una fila y un id por cada título. El problema es que antes de eliminar los dúplicados era necesario visitar la tabla de cruce entre los clientes y los juegos y cambiar todos los ids de juegos que serían eliminados por el id del juego que sobreviviría. Esto se logró con el siguiente script:
+
+\inputminted{mysql}{\scriptdir limpieza_datos.sql}
+
+Para completar las siguientes secciones del proyecto era necesario poder cargar los datos después de poner las claves primarias y foráneas, cosa que este método de carga y posterior limpieza no permitía. Por suerte, MySQL tiene una sentencia para exportar datos a csv. Aprovechándola, exportamos los datos de cada tabla ya filtrados a ficheros que poder cargar más adelante.
+
+Una nota importante sobre este proceso es que por motivos no muy claros, el primer id de cada tabla exportada se cambiaba por un cero. Como solo una fila se veía afectada como máximo, restablecimos los ids erroneos a sus valores correctos manualmente.
+
+Tras todo esto, la carga de los datos podía volver a realizarse facilmente en cualquier momento cargando los ficheros de datos filtrados de la siguiente forma:
+
+\inputminted{mysql}{\scriptdir load_curated_data.sql}
+
+Cerca del final del proyecto descubrimos una funcionalidad de MySQL Workbench que produce un backup de los datos de las tablas sin guardar la estructura de la base de datos que importa de forma mucho más veloz que con el \emph{csv}.
+
+\subsection{Scripts de gestión de claves}
+
+Los scripts de gestión de claves son bastante sencillos, simplemente se alteran las tablas para establecer los campos especificados como claves primarias o foráneas:
+
+\inputminted{mysql}{\scriptdir set_table_primary_keys.sql}
+
+\inputminted{mysql}{\scriptdir set_table_foreign_keys.sql}
+
+Para eliminarlas si fuese necesario:
+
+\inputminted{mysql}{\scriptdir drop_table_primary_keys.sql}
+
+\inputminted{mysql}{\scriptdir drop_table_foreign_keys.sql}
+
+
+
+
+\subsection{?`Importa el orden de inserción de claves y datos?}
+
+Para resolver la duda de si es más rápido insertar los datos primero y luego añadir las claves o al revés, realizamos la prueba de forma empírica, que concluyó con los siguientes resultados:
+
+Creándo las claves e insertando después: 2441.18 ms
+
+\begin{enumerate}
+	\item Creación de las claves primarias: 259.24 ms 
+	\item Creación de las claves foráneas: 178.14 ms
+	\item Inserción de los datos: 2003.8 ms
+\end{enumerate}
+
+Insertando primero y creando las claves después: 8551.96 ms
+
+\begin{enumerate}
+	\item Inserción de los datos: 1626.4 ms
+	\item Creación de las claves primarias: 6656.8 ms
+	\item Creación de las claves foráneas: 268.76 ms
+\end{enumerate}
+
+Se puede observar que el proceso es muchísimo más lento si se crean las claves tras la inserción de los datos.
+
+El paso de cargar los datos tarda ligeramente más si ya existian las claves previamente, debido a que se deben ir comprobando las restricciones y actualizando los índices. A cambio, la creación de las claves es muy veloz. Con el proceso invertido se tarda muchísimo más en total porque crear las claves sobre los datos ya insertados es un proceso increíblemente costoso de verificación de restricciones y creación de índices.
+	
+\newpage
+
+%------------------------------------------------
+%	Parte 2
+%------------------------------------------------
+
+\section{Parte 2}
+
+\subsection{Consultas más frecuentes}
+
+Lo primero que hicimos para optimizar las consultas más frecuentes es programarlas, de forma que más adelante pudiésemos comparar las diferencias de velocidad:
+
+\inputminted{mysql}{\scriptdir consultas/procedures.sql}
+
+Al ser las consultas más frecuentes, las registramos como procedimientos para facilitar su llamada más adelante.
+
+Una vez programadas, nos pusimos a optimizar.
+
+\subsection{Optimización mediante índices}
+
+Los tres índices, aparte de los de las claves, que impusimos son para los nombres, los apellidos y los títulos de los juegos, que por su aparición en las consultas, parecían los que más optimización prometían.
+
+Las distintas combinaciones de índices produjeron los siguientes tiempos para las consultas más frecuentes:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|l|l|l|}
+\hline
+Primary Key            & Foreign Key           & Índice 1              & \multicolumn{1}{c|}{Índice 2} & \multicolumn{1}{c|}{Índice 3} & \multicolumn{1}{c|}{Tiempo}    \\ \hline
+\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} &                               &                               & 246.92 ms                      \\ \hline
+X                      & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} &                               &                               & 232.84 ms                      \\ \hline
+X                      & X                     & \multicolumn{1}{l|}{} &                               &                               & 213.06 ms                      \\ \hline
+X                      & X                     & X                     &                               &                               & 210.56 ms                      \\ \hline
+X                      & X                     &                       & \multicolumn{1}{c|}{X}        & \multicolumn{1}{c|}{}         & \multicolumn{1}{c|}{178.49 ms} \\ \hline
+X                      & X                     &                       & \multicolumn{1}{c|}{}         & \multicolumn{1}{c|}{X}        & \multicolumn{1}{c|}{212.67 ms} \\ \hline
+X                      & X                     & X                     & \multicolumn{1}{c|}{X}        & \multicolumn{1}{c|}{X}        & \multicolumn{1}{c|}{170.73 ms} \\ \hline
+\end{tabular}
+\end{table}
+
+La especificación de los índices mencionados se realiza con este código:
+
+\inputminted{mysql}{\scriptdir consultas/setIndices.sql}
+
+Las mejoras de todos ellos son lo suficientemente buenas como para permanecer en la base de datos a pesar de que los tiempos de inserción se vean ligeramente afectados.
+
+\newpage
+
+%------------------------------------------------
+%	Parte 3
+%------------------------------------------------
+
+\section{Parte 3}
+
+\subsection{?`Cómo creamos la base de datos MySQL?}
+
+La base de datos con la que se ha estado tratando hasta este punto era una MySQL en un contenedor de Docker. Para la replicación de este proyecto se puede crear de la siguiente forma:
+
+\begin{minted}{bash}
+docker run --name <NOMBRE_DEL_CONTENDOR>\
+-p <PUERTO_REAL>:<PUERTO_VIRTUAL>\
+-e MYSQL_ROOT_PASSWORD=<CONTRASEÑA_DEL_USUARIO_ROOT>\
+-d mysql:<VERSION_DE_MYSQL>
+\end{minted}
+
+En nuestro caso en particular:
+
+\begin{minted}{bash}
+docker run --name mysql\
+-p 3306:3306\
+-e MYSQL_ROOT_PASSWORD=Keo\
+-d mysql:latest
+\end{minted}
+
+La contraseña está cambiada.
+
+
+
+
+\subsection{Acceso a MySQL desde phpMyAdmin}
+
+Para acceder a la base de datos MySQL con phpMyAdmin es necesario configurar las siguientes lineas en el fichero "\mintinline{bash}{Applications/XAMPP/xamppfiles/phpmyadmin/config.inc.php}" en OS X o "\mintinline{bash}{C:/xampp/phpMyAdmin/config.inc.php}" en Windows:
+
+\begin{minted}{php}
+/* Authentication type */
+$cfg['Servers'][$i]['auth_type] = 'config';
+$cfg['Servers'][$i]['user'] = 'root';
+$cfg['Servers'][$i]['password'] = 'contraseña';
+/* Server parameters */
+$cfg['Servers'][$i]['host'] = 'dirección_ip:puerto'
+\end{minted}
+
+El contenido de dichas lineas debe ser el de las credenciales de la base de datos a la que se desea acceder.
+
+
+
+
+\subsection{Arreglar MariaDB de XAMPP}
+
+En Mac OS X la base de datos MariaDB que venía con XAMPP daba muchos fallos. Intentamos arreglarlos hasta que encontramos uno que no fuimos capaces de solucionar en un tiempo razonable. Como ya sabíamos usar Docker, creamos un contenedor de MariaDB para solucionar la situación:
+
+\begin{minted}{bash}
+docker run --name <NOMBRE_DEL_CONTENDOR>\
+-p <PUERTO_REAL>:<PUERTO_VIRTUAL>\
+-e MYSQL_ROOT_PASSWORD=<CONTRASEÑA_DEL_USUARIO_ROOT>\
+-d mariadb:<VERSION_DE_MARIADB>
+\end{minted}
+
+En nuestro caso en particular:
+
+\begin{minted}{bash}
+docker run --name mariadb\
+-p 3309:3306\
+-e MYSQL_ROOT_PASSWORD=Keo\
+-d mariadb:10.4
+\end{minted}
+
+La contraseña está cambiada.
+
+Se puede apreciar que en este contenedor mapeamos el puerto 3306 del entorno virtual al puerto 3309 de la máquina, de forma que no hace falta cambiar el puerto del servidor internamente para que use un puerto diferente al del servidor MySQL anterior.
+
+
+
+
+\subsection{Comprobar el funcionamiento del entorno}
+
+Para comprobar que todo hasta aquí se había realizado de manera correcta, introdujimos un cliente falso en la tabla de clientes de MySQL desde phpMyAdmin, comprobamos su inserción desde MySQL Workbench y lo eliminamos para no dejar datos contaminados. De igual forma, creamos una tabla de prueba en la base de datos MariaDB, introdujimos una fila de prueba y comprobamos su inserción desde phpMyAdmin.
+
+
+
+
+\subsection{Insertar los datos de MySQL a MariaDB}
+
+Para replicar la base de datos MySQL en MariaDB solo hubo que ejecutar de forma ordenada los scripts elaborados durante la primera y segunda parte del proyecto en este orden:
+
+\begin{enumerate}
+	\item Creación de los espacios de tabla.
+	\item Creación de las tablas en sus correspondientes espacios.
+	\item Inserción de las claves primarias y foráneas.
+	\item Inserción de los índices.
+	\item Inserción de los procedimientos más frecuentes.
+	\item Inserción de los datos del backup.
+\end{enumerate}
+
+Aunque si hubo un problema: en MariaDB los índices de clave primaria posteriores a la creación de las tablas generados mediante un \mintinline{mysql}{ALTER TABLE} no sobreescriben los unique anteriores, por lo que hubo que eliminarlos a mano para añadir los de clave primaria:
+
+\inputminted{mysql}{\scriptdir remplazar_indices_pk_xammp.sql}
+
+
+
+
+\subsection{Configurar los tamaños de página}
+
+Para configurar el tamaño de página de la base de datos es necesario rehacerla por lo que un backup sería no solo prudente si no necesario.
+
+En el fichero "\mintinline{bash}{/etc/mysql/my.cnf}", dentro del contendor de MariaDB, es necesario añadir la siguiente linea donde se encuentran las sentencias de \emph{innodb}: \mintinline{bash}{innodb_page_size = <tamaño_de_página>}. En nuestro caso \mintinline{bash}{tamaño_de_página} valdrá: \mintinline{bash}{4k, 16k y 64k}. El buffer ya venía preconfigurado con un tamaño razonable de 246 Mb, pero si fuese necesario cambiarlo, se haría en la linea: \mintinline{bash}{innodb_buffer_pool_size = <tamaño_del_buffer>}.
+
+Una vez cambiados los parámetros de \emph{innodb} hay que eliminar la base de datos. Esto se hace borrando todo el contenido en "\mintinline{bash}{/var/lib/mysql}".
+
+Realizando las pruebas con los distintos tamaños de página quedan los siguientes resultados:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{Tamaño Página} & \multicolumn{1}{c|}{Espacio Base de Datos} & \multicolumn{1}{c|}{Tiempo de Consultas} \\ \hline
+4 KB                                & 28.8 MB                                    & 251.0 ms                                 \\ \hline
+16 KB                               & 26.8 MB                                    & 235.7 ms                                 \\ \hline
+64 KB                               & 30.5 MB                                    & 216.8 ms                                 \\ \hline
+\end{tabular}
+\end{table}
+
+Al ser consultas que afectan a todas las filas de la tabla, cuanto mayor es la página, más rápida es la consulta. Esto es porque se cargan menos páginas cuanto más grandes son.
+
+\newpage
+
+%------------------------------------------------
+%	Conclusión
+%------------------------------------------------
+
+\section{Conclusión}
+
+Durante esta práctica, no solo hemos aprendido sobre administración y gestión de bases de datos, si no que también hemos desarrollado habilidades de resolución de problemas externos, como la instalación de los servidores y clientes, que dio bastantes más problemas de los esperados.
+
+Lo más complicado fue la limpieza de los datos, debido a la inmensa cantidad de cambios sobre los datos iniciales necesarios y a que solo se iba detectando su necesidad a medida que surgían errores. Gracias a los conocimientos que adquirimos en la asignatura de bases de datos de segundo, pudimos ocuparnos de esta parte utilizando SQL desde de la base de datos, sin tener que utilizar herramientas externas como excel.
+
+\fi
+
+\end{document}

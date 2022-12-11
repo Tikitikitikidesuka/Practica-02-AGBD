@@ -17,7 +17,7 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
 - [X] Crear los usuarios siguientes y establecer sus roles:
     - [X] Usuario: Gohan - Rol: Gestor
     - [X] Usuario: Vegeta - Rol: CompradorJuegos
-    - [X] Usuario: Bidel - Rol: CompradorJuegos
+    - [X] Usuario: Videl - Rol: CompradorJuegos
     - [X] Usuario: Trunks - Rol: Dependiente
     - [X] Usuario: Goku - Rol: Dependiente
 
@@ -29,7 +29,7 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
 - [X] Acceder a la base de datos con todos los usuarios creados y ejecutar por cada uno de ellos dos sentencias sobre las que tengan privilegios y otras dos sobre las que no:
     - [X] Para Gohan
     - [X] Para Vegeta
-    - [X] Para Bidel
+    - [X] Para Videl
     - [X] Para Trunks
     - [X] Para Goku
     
@@ -82,3 +82,11 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
     NOTA: Vale con un SELECT * FROM clientes y otro sobre juegos para demostrar que no tiene acceso.
 
 - [X] Realizar una comparativa de los dos métodos utilizados para manipular la información (consultas y vistas) que incluya aspectos de rendimiento y seguridad.
+
+### Tareas Parte 3
+
+- [X] Realizar una copia de seguridad de la BBDD denominada "backup_fecha" mediante:
+    - [X] La interfaz de MySQL Workbench.
+    - [X] La consola de comandos y SQL.
+    
+- [X] Crear una base de datos llamada "recovery_fecha" y cargar ahí el backup.

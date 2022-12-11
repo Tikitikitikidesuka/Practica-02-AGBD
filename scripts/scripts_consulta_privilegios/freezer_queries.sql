@@ -36,4 +36,5 @@ INSERT INTO conjuntoB (JuegoID, Titulo, Consola, Tamanio, Editor)
 #A4
 INSERT INTO conjuntoA (CLienteID, DNI, Nombre, Apellidos, Provincia, Email)
 	VALUES (578934798, '99999999A', 'Usopp', 'Yusuf', 'Grand Line', 'ussopsenchoo@hotmale.com');
+	
 SHOW PROFILES;

@@ -7,9 +7,9 @@ SELECT COUNT(*) AS Ventas, juegos.Titulo
 	FROM clientes_juegos JOIN juegos ON clientes_juegos.juegoID = juegos.juegoID
 	GROUP BY juegos.juegoID, juegos.Titulo
 	HAVING COUNT(*) >= ALL (SELECT COUNT(*)
-								FROM clientes_juegos
-								GROUP BY juegoID
-							);
+		FROM clientes_juegos
+		GROUP BY juegoID
+	);
                             
 INSERT INTO `juegos` (`JuegoID`, `Titulo`, `Consola`, `Tamanio`, `Editor`)
 VALUES (10000, "Cowabunga", "MegaDrive", 32768, "UPMGames");

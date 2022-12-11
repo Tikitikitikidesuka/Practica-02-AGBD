@@ -136,7 +136,7 @@
 	
 \section{Parte 1}
 
-\subsection{Creación de los roles y los usuarios}
+\subsection{Crear los roles y los usuarios}
 
 Se quieren crear los roles \mintinline{mysql}{gestor}, \mintinline{mysql}{compradorJuegos} y \mintinline{mysql}{dependiente} con las siguientes especificaciones:
 
@@ -156,11 +156,11 @@ Esto se realiza con los siguientes scripts:
 
 \inputminted{mysql}{\scriptdir scripts_roles/dependiente_privileges_and_role_creation.sql}
 
-\subsection{Comprobación de los cambios}
+\subsection{Comprobar los cambios}
 
 Con el usuario root se quiere comprobar que los cambios anteriores se han realizado correctamente. Eso se hizo de dos formas distintas con el siguiente script:
 
-\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/check_privileges.sql}
+\inputminted{mysql}{\scriptdir scripts_consulta_privilegios/check_privileges.sql}
 
 El primer método consulta el catálogo. El segundo directamente usa la sentencia de consulta de privilegios de MySQL.
 
@@ -169,21 +169,21 @@ Como tercer método se puede usar la interfaz de MySQLWorkbench:
 \includegraphics[width=\textwidth]{\imagedir privilegios_01.png}
 \includegraphics[width=\textwidth]{\imagedir privilegios_02.png}
 
-\subsection{Prueba de sentencias}
+\subsection{Probar las sentencias}
 
 Cada uno de los usuarios ejecutó unas sentencias para probar sus privilegios. Estos son los scripts que se ocupan de ello y cada uno especifica que usuario debe ejecutarlo:
 
-\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/gohan_queries.sql}
-\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/vegeta_queries.sql}
-\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/videl_queries.sql}
-\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/trunks_queries.sql}
-\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/goku_queries.sql}
+\inputminted{mysql}{\scriptdir scripts_consulta_privilegios/gohan_queries.sql}
+\inputminted{mysql}{\scriptdir scripts_consulta_privilegios/vegeta_queries.sql}
+\inputminted{mysql}{\scriptdir scripts_consulta_privilegios/videl_queries.sql}
+\inputminted{mysql}{\scriptdir scripts_consulta_privilegios/trunks_queries.sql}
+\inputminted{mysql}{\scriptdir scripts_consulta_privilegios/goku_queries.sql}
 
 \subsection{Revocar los permisos de Goku}
 
 Debido a un cambio organizativo, es necesario quitarle los permisos de inesrción y modificación a Goku. Para realizarlo se utiliza el siguiente script:
 
-\inputminted{mysql}{\scriptdir scripts/scripts_roles/revoke_goku.sql}
+\inputminted{mysql}{\scriptdir scripts_roles/revoke_goku.sql}
 
 Se le quita el rol de dependiente y se le ponen privilegios personalizados para cumplir los requisitos.
 
@@ -197,19 +197,19 @@ Se le quita el rol de dependiente y se le ponen privilegios personalizados para 
 
 Ahora se crea al usuario freezer y las vistas que podrá usar:
 
-\inputminted{mysql}{\scriptdir scripts/scripts_roles/freezer_and_views_creation.sql}
+\inputminted{mysql}{\scriptdir scripts_roles/freezer_and_views_creation.sql}
 
 \subsection{Crear consultas de freezer}
 
 A continuación se crean las consultas especificadas en el enunciado para freezer sobre las vistas:
 
-\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/freezer_queries.sql}
+\inputminted{mysql}{\scriptdir scripts_consulta_privilegios/freezer_queries.sql}
 
 Se añade \mintinline{mysql}{SHOW PROFILES} para ver los tiempos de ejecución de las consultas.
 
 Para que lo haga root sobre las tablas directamente se crea también el siguiente script:
 
-\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/root_queries.sql}
+\inputminted{mysql}{\scriptdir scripts_consulta_privilegios/root_queries.sql}
 
 \subsection{Ejecutar las consultas con root}
 
@@ -237,7 +237,7 @@ Los tiempos de ejecutar las consultas con el usuario freezer sobre las vistas so
 	\item Ejecución de B2 sobre B: T = 0.0016 segundos.
 \end{itemize}
 
-Las consultas A4 y B3 fallan si las vistas no tienen todos los campos que no pueden ser nuelos de la tabla original. Para resolver este problema se añaden los campos nulos a las vistas (DNI al conjunto A y Consola al conjunto B). Los tiempos tras este cambio de dichas consultas son:
+Las consultas A4 y B3 fallan si las vistas no tienen todos los campos que no pueden ser nulos de la tabla original. Para resolver este problema se añaden los campos nulos a las vistas (DNI al conjunto A y Consola al conjunto B). Los tiempos tras este cambio de dichas consultas son:
 
 \begin{itemize}
 	\item Ejecución de A4 sobre A: T = 0.0084 segundos.
@@ -266,11 +266,11 @@ La copia de seguridad se puede hacer a través de la consola de MySQL o de la in
 
 Para realizarlo a través del terminal se haría lo siguiente:
 
-\minted{bash}{mysqldump -u root PracABD1 > backup_fecha.sql}
+\mint{bash}{mysqldump -u root PracABD1 > backup_10_12_2022.sql}
 
 Como en nuestro caso la MySQL está en un contendor Docker, primero hace falta acceder a su terminal con:
 
-\minted{bash}{docker exec -it mysql bash}
+\mint{bash}{docker exec -it mysql bash}
 
 Para hacerlo a través de la interfaz de MySQL Workbench:
 
@@ -284,6 +284,6 @@ Para hacerlo a través de la interfaz de MySQL Workbench:
 
 \subsection{Cargar la copia de seguridad}
 
-Para cargar la copia de seguridad simplemente se crea el schema nuevo con \mintinline{mysql}{CREATE SCHEMA recovery_10_12_2022} y se carga a través del terminal con \mintinline{bash}{mysql -u root -p recovery_10_12_2022 < backup 10_12_2022.sql} o por el mismo método que la exportación con MySQLWorkbench pero dándole al botón de importar.
+Para cargar la copia de seguridad, simplemente se crea el schema nuevo con \mintinline{mysql}{CREATE SCHEMA recovery_10_12_2022} y se carga a través del terminal con \mintinline{bash}{mysql -u root -p recovery_10_12_2022 < backup 10_12_2022.sql} o por el mismo método que la exportación con MySQLWorkbench pero dándole al botón de importar.
 
 \end{document}

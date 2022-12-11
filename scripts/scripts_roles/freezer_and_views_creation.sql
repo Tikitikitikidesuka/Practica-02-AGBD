@@ -1,3 +1,6 @@
+
+#INICIADO SESIÓN COMO ROOT
+
 CREATE USER 'freezer' IDENTIFIED BY 'freezer';
 
 #Conjunto A

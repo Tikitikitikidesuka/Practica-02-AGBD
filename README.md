@@ -82,3 +82,11 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
     NOTA: Vale con un SELECT * FROM clientes y otro sobre juegos para demostrar que no tiene acceso.
 
 - [X] Realizar una comparativa de los dos métodos utilizados para manipular la información (consultas y vistas) que incluya aspectos de rendimiento y seguridad.
+
+### Tareas Parte 3
+
+- [X] Realizar una copia de seguridad de la BBDD denominada "backup_fecha" mediante:
+    - [X] La interfaz de MySQL Workbench.
+    - [X] La consola de comandos y SQL.
+    
+- [X] Crear una base de datos llamada "recovery_fecha" y cargar ahí el backup.

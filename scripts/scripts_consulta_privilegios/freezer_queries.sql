@@ -29,6 +29,7 @@ SELECT COUNT(*) AS NumeroJuegosNintendo
 SHOW PROFILES;
 
 SET PROFILING = TRUE;
+
 #B3
 INSERT INTO conjuntoB (JuegoID, Titulo, Consola, Tamanio, Editor)
 	VALUES (372187, 'Final Fiesta II', 'GameBoy', '42069', 'Marvel');

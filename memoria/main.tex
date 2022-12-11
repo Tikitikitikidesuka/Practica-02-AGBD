@@ -149,7 +149,7 @@ El rol \mintinline{mysql}{compradorJuegos} podrá visualizar todas las tablas de
 
 El rol \mintinline{mysql}{dependiente} podrá visualizar todas las tablas de la BD, dar de alta nuevos clientes y modificar clientes existentes (operando sobre la tabla Clientes), así como indicar que un cliente ha alquilado un videojuego añadiendo un nuevo registro (operando sobre la tabla clientes\_juegos).
 
-Tambíen se quieren crear los suarios \mintinline{mysql}{gohan} con rol \mintinline{mysql}{gestor}, \mintinline{mysql}{vegeta} con el rol \mintinline{mysql}{compradorJuegos}, \mintinline{mysql}{bidel} con el rol \mintinline{mysql}{compradorJuegos}, \mintinline{mysql}{videl} con el rol \mintinline{mysql}{compradorJuegos}, \mintinline{mysql}{trunks} con el rol \mintinline{mysql}{dependiente} y \mintinline{mysql}{goku} con el rol \mintinline{mysql}{dependiente}.
+Tambíen se quieren crear los suarios \mintinline{mysql}{gohan} con rol \mintinline{mysql}{gestor}, \mintinline{mysql}{vegeta} con el rol \mintinline{mysql}{compradorJuegos}, \mintinline{mysql}{videl} con el rol \mintinline{mysql}{compradorJuegos}, \mintinline{mysql}{trunks} con el rol \mintinline{mysql}{dependiente} y \mintinline{mysql}{goku} con el rol \mintinline{mysql}{dependiente}.
 
 Esto se realiza con los siguientes scripts:
 
@@ -170,11 +170,18 @@ El primer método consulta el catálogo. El segundo directamente usa la sentenci
 
 Como tercer método se puede usar la interfaz de MySQLWorkbench:
 
-\includegraphics[width=\textwidth]{\imagedir ventana_conexion_mysql_workbench.png}
+\includegraphics[width=\textwidth]{\imagedir privilegios_01.png}
+\includegraphics[width=\textwidth]{\imagedir privilegios_02.png}
 
+\subsection{Prueba de sentencias}
 
+Cada uno de los usuarios ejecutó unas sentencias para probar sus privilegios. Estos son los scripts que se ocupan de ello y cada uno especifica que usuario debe ejecutarlo:
 
-
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/gohan_queries.sql}
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/vegeta_queries.sql}
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/videl_queries.sql}
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/trunks_queries.sql}
+\inputminted{mysql}{\scriptdir scripts/scripts_consulta_privilegios/goku_queries.sql}
 
 
 \iffalse

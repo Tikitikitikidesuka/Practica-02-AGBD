@@ -250,9 +250,9 @@ Se puede comprobar que freezer no puede operar directamente sobre las tablas int
 
 \subsection{Comparativa de los métodos}
 
-En cuanto a la eficiencia, la consulta de datos a través de vistas puede ser más eficiente que sobre sus tablas subyacentes. Esto es porque las vistas precomputan los resultados de las consultas y los almacenan en una tabla virtual, de forma que permite un acceso más rápido a los datos.
+En cuanto a la eficiencia, la consulta de datos a través de vistas suele ser menos eficiente que sobre sus tablas subyacentes. Esto es porque las son tablas virtuales que deben crearse cuando se ejecutan consultan sobre ellas. La deficiencia en velocidad podría arreglarse añadiendo persistencia por cache, pero no es el caso con MySQL.
 
-La seguridad también puede verse favorecida por el uso de las vistas. Se pueden crear vistas con privilegios propios y los datos justos para manejar el acceso de cada usuario a ellos de forma mucho más precisa.
+La seguridad a cambio puede verse favorecida por su uso. Se pueden crear vistas con privilegios propios y los datos justos para manejar el acceso de cada usuario a ellos de forma mucho más precisa.
 
 %------------------------------------------------
 %	Parte 3

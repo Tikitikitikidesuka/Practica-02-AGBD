@@ -4,6 +4,24 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
 
 ---
 
+## Notas para el Examen
+
+Para acceder al terminal de un contenedor:
+- `docker exec -it mysql bash`
+
+Para acceder a la consola de mySQL:
+- `mysql -u usuario [-p]`
+
+Para copiar documentos de un contenedor a fuera y viceversa:
+- `docker cp <containerId>:/file/path/within/container /host/path/target`
+- `docker cp /host/path/target <containerId>:/file/path/within/container`
+
+Para hacer copia de seguridad de mySQL y cargarla respectivamente:
+- `mysqldump -u usuario [-p] schema > backup.sql`
+- `mysql -u usuario [-p] schema < backup.sql`
+
+---
+
 ### Tareas Parte 1
 
 - [X] Establecer los niveles de seguridad y confidencialidad:

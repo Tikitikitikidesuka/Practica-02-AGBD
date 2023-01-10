@@ -6,8 +6,9 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
 
 ## Notas para el Examen
 
-Para acceder al terminal de un contenedor:
-- `docker exec -it nameContainer bash`
+Para acceder al terminal de un contenedor o a cualquier otro programa:
+- `docker exec -it container bash`
+- `docker exec -it container program`
 
 Para acceder a la consola de mySQL:
 - `mysql -u user [-p]`

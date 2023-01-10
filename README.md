@@ -7,7 +7,7 @@ Repositorio de la segunda práctica de la asignatura de administración y gesti�
 ## Notas para el Examen
 
 Para acceder al terminal de un contenedor:
-- `docker exec -it mysql bash`
+- `docker exec -it nameContainer bash`
 
 Para acceder a la consola de mySQL:
 - `mysql -u user [-p]`
